@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+   学好js面向对象，能很大程度上提高代码的重用率，jq..
+   有效的创建对象。
+  1、对象：对象是一个整体，对外提供一些操作。
+  2、面向对象：使用对象时，只关注对象提供的功能，不关注内部细节。这就是面向对象。
+  3、js的对象组成：方法和属性
+js中，有函数，方法，事件处理函数，构造函数，这四个都是函数，只是作用不同。
+  4、 区别:函数是独立的存在，方法属于一个对象。事件处理函数用来处理一个事件，构造函数用来构造对象。
+
+   <script type="text/html">
+       var arr = [3,6,9,11,13];
+//       alert(typeof arr);  //数组就是一个对象
+//       alert(arr.length);  //对像的属性length
+         arr.push(6);       //对象的方法叫push()
+//       alert(arr);
+
+   </script>
+   <script type="text/html">
+       function show() {
+            alert(this);
+
+       }
+       show();
+       window叫全局对象，函数叫全局函数，说明全局函数属于window,定义的这个show()等于为window添加一个方法。
+       全局函数和变量都是属于window的。
+       上面相当于下面这样写
+    window.show = function() {
+         alert(this);
+    }
+       window.show();
+
+       同样也可为自已的需求给对象加方法，比如显示数组.。
+       但是我们不能在系统对象中随意附加方法和属性，否则可能会覆盖已有方法。
+
+       var arr = [5,6,7,8,9];
+       arr.show = function() {
+            alert(this)
+       }
+       arr.show();
+
+       从上面的例子可以看出来，this即表示当前函数的调用者是谁，但是在一种情况下是不是的。
+       就是用new来创建对象时候，this并不是指向调用者的。
+       全局对象
+       window.document  后面这个document是window的属性
+       window.alert()    后面这个alert就是window的方法
+
+
+
+
+   </script>
+   <script type="text/html">
+//       js中自定义对象，创建一个简单对象。
+          var person = new Object();
+           person.name = "laowang";
+           person.age = 22;
+           person.showName = function() {
+                console.log("姓名:"+this.name);
+           }
+person.showAge = function() {
+    console.log("年龄:"+this.age);
+}
+person.showName();
+person.showAge();
+       这么写会有非常大的问题，如果我有多个人怎么办，每次都要新建一个对象，然后再
+       加属性，方法，这种方式是一次性，会产生大量重复代码，不可取。
+
+   </script>
+   <script type="text/html">
+//         构造函数：工厂
+//       工厂函数：投入原料，加工，出厂。
+//       通过构造函数来生成对象，将重复的代码提取到一个函数里面，避免了写大量重复的代码。这样我们在需要这个对象
+//       的时候，就可以简单地创建出来了。
+         function createPerson(name,age) {
+             var person = new Object();
+//             来料
+             person.name = name;
+             person.age = age;
+//             加工
+             person.showName = function() {
+                 console.log("姓名:"+this.name);
+             }
+             person.showAge = function() {
+                 console.log("年龄:"+this.age);
+             }
+//             出厂
+             return person;
+         }
+//       创建对象
+           var p1 = createPerson("laowang",22);
+           var p2 = createPerson("laozhao",21);
+
+p1.showName();
+p1.showAge();
+p2.showName();
+p2.showAge();
+       这种方式有两个缺点。
+       1、我们创建对象是通用new来创建，比如new Date(),这里使用的是方法创建。使用new来创建可以简化一些代码，
+       也带来新的特性。
+       2、每个对象都一套自已的方法，浪费资源。
+
+
+   </script>
+   <script type="text/html">
+         function Person(name,age) {
+             this.name = name;
+             this.age = age;
+//             加工
+             this.showName = function() {
+                 console.log("姓名:"+this.name);
+             }
+             this.showAge = function() {
+                 console.log("年龄:"+this.age);
+             }
+         }
+//         创建对象
+       var p1 = new Person("laowang",22);
+       var p2 = new Person("laozhao",21);
+         p1.showName()
+       console.log(p1.showName === p2.showName)
+
+//       这种方式只解次第一个问题，每个对象还是有自已一套方法
+
+   </script>
+   <script type="text/html">
+//       prototype   原型
+//       原型添加方法不会有多个副本，不会浪费资源。所有对象只有一套方法。
+        function Person(name,age) {
+             this.name = name;
+             this.age = age;
+        }
+       Person.prototype.showName = function() {
+           console.log("姓名:"+this.name);
+       }
+Person.prototype.showAge = function() {
+    console.log("姓名:"+this.age);
+
+}
+var p1 = new Person("laowang",22);
+var p2 = new Person("laozhao",21);
+p1.showName();
+p2.showName();
+
+console.log(p1.showName === p2.showName)
+//        最大优点不会浪费资源
+
+
+//       求一个数组求和的方法
+
+
+
+   </script>
+   <script>
+         Array.prototype.sum = function() {
+               var sum = 0;
+             for(var i = 0; i<this.length; i++) {
+                   sum += this[i]
+             }
+             return sum;
+         }
+
+       var arr1 = [11,22,33,44,55];
+       var arr2 = new Array(1,3,4,5,6,6);
+       console.log(arr1.sum());
+       console.log(arr2.sum());
+       console.log(arr1.sum === arr2.sum);
+       console.log(arr1.sum === Array.prototype.sum);
+
+         var tab1 = new Tab("")
+         var tab2 = new Tab("")
+
+   </script>
+</body>
+</html>
